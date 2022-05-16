@@ -3,8 +3,10 @@ import React, { Fragment } from 'react';
 // Don't touch this import
 import { fetchQueryResultsFromTermAndValue } from '../api';
 
+
+
 /**
- * We need a new component called Searchable which:
+ * We need a new component called Searchable which:(searachable helper function or new component altogther?)
  * 
  * Has a template like this:
  * 
@@ -27,9 +29,26 @@ import { fetchQueryResultsFromTermAndValue } from '../api';
  * catch: 
  *  - console.error the error
  * finally:
- *  - call setIsLoading, set it to false
+ *  - call setIsLoading, set it to false (still not sure how to set this to false, I think i did it right in the search section but doublecheck)
  */
+
 const Searchable = (props) => {
+    const {searchTerm, searchValue, setIsLoading, setSearchResults}= props; 
+    return (<span className="content">
+        <a href="#" onClick={async (event) => {
+            event.preventDefault();
+            setIsLoading(true);
+            try{
+                const response = await fetchQueryResultsFromTermAndValue(searchTerm, searchValue);
+                const data = await response.json();
+                setSearchResults(data); 
+            } catch(error){
+                console.log(error);
+            }
+            setIsLoading(false)
+        }}>{searchTerm}</a>
+        </span>
+    )
   
 }
 
@@ -41,7 +60,7 @@ const Searchable = (props) => {
  * And like this when one is:
  * 
  * <main id="feature">
- *   <div className="object-feature">
+ *   <div className="object-feature"> (I'm pretty sure we are replacing these values with props that we pass in but im not sure)
  *     <header>
  *       <h3>OBJECT TITLE</h3>
  *       <h4>WHEN IT IS DATED</h4>
@@ -68,7 +87,25 @@ const Searchable = (props) => {
  * This component should be exported as default.
  */
 const Feature = (props) => {
+    return(
 
+ props ? <main id="feature">
+    <div className="object-feature"> 
+      <header>
+        {/* <h3>{props.title}</h3>
+        <h4>{props.dated}</h4> */}
+      </header>
+      <section className="facts">
+        {/* <span className="title">{props.facts.title}</span>
+        <span className="content">{props.facts.value}</span>
+        <span className="title">{props.next.title}{// wtf?}</span> */}
+        <span className="content">NEXT FACT VALUE</span>
+      </section>
+      <section className="photos">
+        {/* <img src={props.imgURL} alt={props.SOMETHING_WORTHWHILE} /> */}
+      </section>
+    </div>
+  </main> : <main id="feature"></main>) 
 }
 
 export default Feature;
